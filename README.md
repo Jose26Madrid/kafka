@@ -132,8 +132,87 @@ bin/kafka-console-consumer.sh --topic test --from-beginning --bootstrap-server l
 
 ---
 
+## 📨 4. Probar script python
+
+### Intalar python y confluent-kafka
+
+```bash
+sudo yum install -y python3
+pip install confluent-kafka
+```
+
+### Crear un script
+
+```bash
+cd kafka_2.13-3.7.0
+vi producer.py
+from confluent_kafka import Producer
+
+p = Producer({'bootstrap.servers': 'localhost:9092'})
+
+def delivery_report(err, msg):
+    if err:
+        print('❌ Error al enviar mensaje:', err)
+    else:
+        print(f'✅ Mensaje enviado a {msg.topic()} [{msg.partition()}]')
+
+for i in range(5):
+    p.produce('test', key=str(i), value=f'Mensaje número {i}', callback=delivery_report)
+
+p.flush()
+
+```
+
+### Crear un script
+
+```bash
+cd kafka_2.13-3.7.0
+vi consumer.py
+from confluent_kafka import Consumer
+
+c = Consumer({
+    'bootstrap.servers': 'localhost:9092',
+    'group.id': 'grupo-python',
+    'auto.offset.reset': 'earliest'
+})
+
+c.subscribe(['test'])
+
+print("⏳ Esperando mensajes en el topic 'test'...\n")
+
+try:
+    while True:
+        msg = c.poll(1.0)
+        if msg is None:
+            continue
+        if msg.error():
+            print("⚠️ Error:", msg.error())
+        else:
+            print(f"📥 Recibido: {msg.value().decode('utf-8')} (clave: {msg.key()})")
+except KeyboardInterrupt:
+    print("🛑 Finalizando consumidor...")
+finally:
+    c.close()
+
+```
+
+### Probar un scripts
+
+```bash
+cd kafka_2.13-3.7.0
+python consumer.py
+
+En otra ventana
+python producer.py
+
+```
+
+---
+
 ## 🧠 Notas sobre Kafka
 
+- Crear alias python=python3 y alias pip=pip3
+- Scripts Antes de ejecutar los scripts crear el topico.
 - Kafka **no elimina mensajes automáticamente** tras consumirlos.
 - Puedes leerlos múltiples veces con `--from-beginning`.
 - Usa `Ctrl + C` para salir del producer o consumer.
