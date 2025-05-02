@@ -101,17 +101,19 @@ ssh -i ~/.ssh/id_rsa ubuntu@<IP_PUBLICA>
 
 ---
 
-## 📨 4. Probar Kafka
+## 📨 3. Probar Kafka
 
 ### Crear un topic
 
 ```bash
+cd kafka_2.13-3.7.0
 bin/kafka-topics.sh --create --topic test --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 ```
 
 ### Enviar mensajes (producer)
 
 ```bash
+cd kafka_2.13-3.7.0
 bin/kafka-console-producer.sh --topic test --bootstrap-server localhost:9092
 ```
 
