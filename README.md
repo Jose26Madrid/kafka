@@ -101,26 +101,6 @@ ssh -i ~/.ssh/id_rsa ubuntu@<IP_PUBLICA>
 
 ---
 
-## ☕ 3. Instalar Java y Kafka
-
-### Java (Amazon Linux 2)
-
-```bash
-sudo yum update -y
-sudo amazon-linux-extras enable corretto8
-sudo yum install java-1.8.0-amazon-corretto -y
-```
-
-### Descargar Kafka
-
-```bash
-wget https://archive.apache.org/dist/kafka/3.7.0/kafka_2.13-3.7.0.tgz
-tar -xvzf kafka_2.13-3.7.0.tgz
-cd kafka_2.13-3.7.0
-```
-
----
-
 ## 📨 4. Probar Kafka
 
 ### Crear un topic
