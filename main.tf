@@ -51,6 +51,17 @@ resource "aws_instance" "kafka_spot" {
   tags = {
     Name = "Kafka-Spot-Instance"
   }
+  user_data = <<-EOF
+              #!/bin/bash
+              sudo dnf install -y tree
+              sudo yum update -y
+              sudo amazon-linux-extras enable corretto8
+              sudo yum install java-1.8.0-amazon-corretto -y
+              wget https://archive.apache.org/dist/kafka/3.7.0/kafka_2.13-3.7.0.tgz
+              tar -xvzf kafka_2.13-3.7.0.tgz
+              cd kafka_2.13-3.7.0
+              sudo yum install -y tmux
+              EOF
 }
 
 # MIT License
